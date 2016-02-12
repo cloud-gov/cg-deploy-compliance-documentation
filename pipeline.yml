@@ -1,0 +1,48 @@
+jobs:
+- name: Deploy compliance.cloud.gov
+  public: true
+  plan:
+  - get: compliance-repository
+    trigger: true
+  - task: run-compliance-masonry
+    config:
+      platform: linux
+      image: docker:///geramirez/compliance-masonry-cli-build#0.3
+      inputs:
+      - name: compliance-repository
+      outputs:
+      - name: masonry-exports
+      run:
+        path: bash
+        args: ["-c", "masonry certs -d compliance-repository/data LATO && masonry docs -d compliance-repository/data -o masonry-exports gitbook LATO"]
+  - task: create-gitbook
+    config:
+      platform: linux
+      image: "docker:///geramirez/gitbook-docker"
+      inputs:
+      - name: compliance-repository
+      - name: masonry-exports
+      outputs:
+      - name: prepared-gitbook
+      run:
+        path: bash
+        args: ["-c", "mv compliance-repository/book.json prepared-gitbook/book.json && mv compliance-repository/Staticfile prepared-gitbook/Staticfile && mv masonry-exports/gitbook/* prepared-gitbook/ && cd prepared-gitbook && gitbook build"]
+  - put: deploy-documentation
+    params:
+      manifest: compliance-repository/manifest.yaml
+      path: prepared-gitbook
+
+resources:
+- name: compliance-repository
+  type: git
+  source:
+    uri: https://github.com/18F/cg-compliance.git
+    branch: master
+- name: deploy-documentation
+  type: cf
+  source:
+    api: {{API}}
+    username: {{USERNAME}}
+    password: {{PASSWORD}}
+    organization: {{ORG}}
+    space: {{SPACE}}
