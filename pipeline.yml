@@ -7,7 +7,7 @@ jobs:
   - task: run-compliance-masonry
     config:
       platform: linux
-      image: docker:///geramirez/compliance-masonry-cli-build#0.3
+      image: docker:///geramirez/compliance-masonry-cli-build#0.4
       inputs:
       - name: compliance-repository
       outputs:
