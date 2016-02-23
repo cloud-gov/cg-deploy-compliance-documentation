@@ -14,7 +14,7 @@ jobs:
       - name: masonry-exports
       run:
         path: bash
-        args: ["-c", "masonry certs -d compliance-repository/data LATO && masonry docs -d compliance-repository/data -o masonry-exports gitbook LATO"]
+        args: ["-c", "masonry certs -d compliance-repository/data FedRAMP-med && masonry docs -d compliance-repository/data -o masonry-exports gitbook FedRAMP-med"]
   - task: create-gitbook
     config:
       platform: linux
