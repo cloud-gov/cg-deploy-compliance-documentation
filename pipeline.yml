@@ -37,7 +37,7 @@ resources:
   type: git
   source:
     uri: https://github.com/18F/cg-compliance.git
-    branch: update2
+    branch: master
 - name: deploy-documentation
   type: cf
   source:
