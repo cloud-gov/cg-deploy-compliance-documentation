@@ -7,14 +7,19 @@ jobs:
   - task: run-compliance-masonry
     config:
       platform: linux
-      image: docker:///geramirez/compliance-masonry-cli-build#0.4
+      image: docker:///geramirez/compliance-masonry-go#0.2
       inputs:
       - name: compliance-repository
       outputs:
       - name: masonry-exports
       run:
-        path: bash
-        args: ["-c", "masonry certs -d compliance-repository/data LATO && masonry docs -d compliance-repository/data -o masonry-exports gitbook LATO"]
+        path: "/bin/sh"
+        args:
+        - -exc
+        - |
+          cd compliance-repository
+          compliance-masonry-go --verbose get
+          compliance-masonry-go --verbose docs gitbook -e ../masonry-exports FedRAMP-med
   - task: create-gitbook
     config:
       platform: linux
@@ -26,7 +31,14 @@ jobs:
       - name: prepared-gitbook
       run:
         path: bash
-        args: ["-c", "mv compliance-repository/book.json prepared-gitbook/book.json && mv compliance-repository/Staticfile prepared-gitbook/Staticfile && mv masonry-exports/gitbook/* prepared-gitbook/ && cd prepared-gitbook && gitbook build"]
+        args:
+        - -exc
+        - |
+          mv compliance-repository/book.json prepared-gitbook/book.json 
+          mv compliance-repository/Staticfile prepared-gitbook/Staticfile
+          mv masonry-exports/* prepared-gitbook/
+          cd prepared-gitbook
+          gitbook build
   - put: deploy-documentation
     params:
       manifest: compliance-repository/manifest.yaml
