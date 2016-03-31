@@ -14,7 +14,12 @@ jobs:
       - name: masonry-exports
       run:
         path: "/bin/sh"
-        args: ["-c", "cd compliance-repository && compliance-masonry-go --verbose get && compliance-masonry-go --verbose docs gitbook -e ../masonry-exports FedRAMP-med"]  
+        args:
+        - -exc
+        - |
+          cd compliance-repository
+          compliance-masonry-go --verbose get
+          compliance-masonry-go --verbose docs gitbook -e ../masonry-exports FedRAMP-med
   - task: create-gitbook
     config:
       platform: linux
@@ -26,7 +31,14 @@ jobs:
       - name: prepared-gitbook
       run:
         path: bash
-        args: ["-c", "echo `ls masonry-exports` && mv compliance-repository/book.json prepared-gitbook/book.json && mv compliance-repository/Staticfile prepared-gitbook/Staticfile && mv masonry-exports/* prepared-gitbook/ && cd prepared-gitbook && gitbook build"]
+        args:
+        - -exc
+        - |
+          mv compliance-repository/book.json prepared-gitbook/book.json 
+          mv compliance-repository/Staticfile prepared-gitbook/Staticfile
+          mv masonry-exports/* prepared-gitbook/
+          cd prepared-gitbook
+          gitbook build
   - put: deploy-documentation
     params:
       manifest: compliance-repository/manifest.yaml
