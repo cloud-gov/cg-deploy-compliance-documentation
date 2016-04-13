@@ -19,7 +19,7 @@ jobs:
         - |
           cd compliance-repository
           compliance-masonry-go --verbose get
-          compliance-masonry-go --verbose docs gitbook -e ../masonry-exports FedRAMP-med
+          compliance-masonry-go --verbose docs gitbook -e ../masonry-exports FedRAMP-moderate
   - task: create-gitbook
     config:
       platform: linux
