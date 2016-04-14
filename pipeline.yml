@@ -7,7 +7,7 @@ jobs:
   - task: run-compliance-masonry
     config:
       platform: linux
-      image: docker:///geramirez/compliance-masonry-go#0.2
+      image: docker:///18fgsa/compliance-masonry
       inputs:
       - name: compliance-repository
       outputs:
@@ -18,12 +18,12 @@ jobs:
         - -exc
         - |
           cd compliance-repository
-          compliance-masonry-go --verbose get
-          compliance-masonry-go --verbose docs gitbook -e ../masonry-exports FedRAMP-moderate
+          compliance-masonry --verbose get
+          compliance-masonry --verbose docs gitbook -e ../masonry-exports FedRAMP-moderate
   - task: create-gitbook
     config:
       platform: linux
-      image: "docker:///geramirez/gitbook-docker"
+      image: "docker:///18fgsa/cg-compliance-gitbook"
       inputs:
       - name: compliance-repository
       - name: masonry-exports
@@ -34,7 +34,7 @@ jobs:
         args:
         - -exc
         - |
-          mv compliance-repository/book.json prepared-gitbook/book.json 
+          mv compliance-repository/book.json prepared-gitbook/book.json
           mv compliance-repository/Staticfile prepared-gitbook/Staticfile
           mv masonry-exports/* prepared-gitbook/
           cd prepared-gitbook

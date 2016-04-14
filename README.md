@@ -2,6 +2,9 @@
 
 This repo contains the [Concourse](https://concourse.ci/) pipeline for deploying [compliance.cloud.gov](https://compliance.cloud.gov/) a gitbook system security plan (SSP) for [Cloud.Gov](https://cloud.gov/).
 
+This repo also contains the Dockerfile for creating the images used in the pipeline.
+
+
 ## Local testing
 
 1. Run
