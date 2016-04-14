@@ -23,7 +23,7 @@ jobs:
   - task: create-gitbook
     config:
       platform: linux
-      image: "docker:///18fgsa/gitbook"
+      image: "docker:///18fgsa/cg-compliance-gitbook"
       inputs:
       - name: compliance-repository
       - name: masonry-exports
