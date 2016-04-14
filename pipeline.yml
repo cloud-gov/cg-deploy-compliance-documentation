@@ -34,11 +34,38 @@ jobs:
         args:
         - -exc
         - |
-          mv compliance-repository/book.json prepared-gitbook/book.json 
+          mv compliance-repository/book.json prepared-gitbook/book.json
           mv compliance-repository/Staticfile prepared-gitbook/Staticfile
           mv masonry-exports/* prepared-gitbook/
           cd prepared-gitbook
           gitbook build
+  - task: check-links
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: ruby
+          tag: '2.3-alpine'
+      inputs:
+      - name: prepared-gitbook
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          # install system libraries for FFI and Nokogiri
+          # https://github.com/ffi/ffi/issues/485#issuecomment-209778567
+          # https://github.com/gliderlabs/docker-alpine/issues/53#issuecomment-179486583
+          apk add --update \
+            build-base \
+            libffi-dev \
+            libxml2-dev \
+            libxslt-dev
+          gem install nokogiri -- --use-system-libraries
+          gem install html-proofer
+          cd prepared-gitbook/_book
+          htmlproofer --disable-external .
   - put: deploy-documentation
     params:
       manifest: compliance-repository/manifest.yaml
