@@ -1,5 +1,5 @@
 jobs:
-- name: Deploy compliance.cloud.gov
+- name: Deploy compliance documentation
   public: true
   plan:
   - get: compliance-repository
@@ -41,7 +41,7 @@ jobs:
           gitbook build
   - put: deploy-documentation
     params:
-      manifest: compliance-repository/manifest.yaml
+      manifest: {{MANIFEST}}
       path: prepared-gitbook
 
 resources:
