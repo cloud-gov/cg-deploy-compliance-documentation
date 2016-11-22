@@ -38,6 +38,7 @@ jobs:
           mv compliance-repository/Staticfile prepared-gitbook/Staticfile
           mv masonry-exports/* prepared-gitbook/
           cd prepared-gitbook
+          gitbook install
           gitbook build
   - put: deploy-documentation
     params:
