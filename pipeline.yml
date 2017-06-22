@@ -7,7 +7,10 @@ jobs:
   - task: run-compliance-masonry
     config:
       platform: linux
-      image: docker:///18fgsa/compliance-masonry
+      image_resource:
+        type: docker-image
+        source:
+          repository: 18fgsa/compliance-masonry
       inputs:
       - name: compliance-repository
       outputs:
@@ -23,7 +26,10 @@ jobs:
   - task: create-gitbook
     config:
       platform: linux
-      image: "docker:///18fgsa/cg-compliance-gitbook"
+      image_resource:
+        type: docker-image
+        source:
+          repository: 18fgsa/cg-compliance-gitbook
       inputs:
       - name: compliance-repository
       - name: masonry-exports
